@@ -24,7 +24,7 @@ public class AddIfMinCommand extends AbstractCommand {
         if(needInput && inputData == null) inputData = this.getInput(consoleManager);
         Boolean res = collectionManager.addIfMin((Pen) inputData);
 
-        if(res)
+        if(res && credentials.username != null && credentials.password != null)
             consoleManager.writeln("Элемент был добавлен");
         else
             consoleManager.writeln("Элемент не был добавлен. Элемент оказался больше минимального");

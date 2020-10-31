@@ -2,7 +2,7 @@ package utils;
 
 import java.math.BigDecimal;
 
-public class NumUtil {
+public class  NumUtil {
     public static final BigDecimal FLOAT_MAX = new BigDecimal(Float.MAX_VALUE);
     public static final BigDecimal DOUBLE_MAX = new BigDecimal(Double.MAX_VALUE);
     public static final BigDecimal INTEGER_MAX = new BigDecimal(Integer.MAX_VALUE);

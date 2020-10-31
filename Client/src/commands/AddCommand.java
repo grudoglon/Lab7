@@ -28,7 +28,7 @@ public class AddCommand extends AbstractCommand {
         if (isNumeric(penID)) {
             ((Pen) inputData).setId(Long.valueOf(penID));
             collectionManager.addElement((Pen) inputData);
-            consoleManager.writeln("New city added");
+            consoleManager.writeln("New pen added");
         }
 
         inputData = null;

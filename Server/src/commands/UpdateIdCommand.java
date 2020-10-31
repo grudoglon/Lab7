@@ -30,7 +30,7 @@ public class UpdateIdCommand extends AbstractCommand {
         }
 
         String cityID = databaseController.updatePen(id, (Pen) inputData, credentials);
-        if (cityID == null) {
+        if (cityID == null && credentials.username != null && credentials.password != null) {
             if(collectionManager.update((Pen) inputData, (long)id))
                 consoleManager.writeln("Element with id(" + id + ") - edited");
             else

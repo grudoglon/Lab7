@@ -1,6 +1,5 @@
 package database;
 
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -13,15 +12,23 @@ import static utils.AppConstant.*;
 public class DBConfigure {
 
     private Connection dbConnection = null;
-
+    //TODO: не забудь поменять system properties
     public void connect(){
         try {
-            dbConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-            System.out.println("Successfully connected to: " + DB_URL);
-        } catch (SQLException e) {
+            String login = System.getProperty("login");
+            String password = System.getProperty("password");
+            if (login != null && password != null) {
+                System.out.println(DB_URL + " : " + login + " : " + password);
+                dbConnection = DriverManager.getConnection(DB_URL, login, password);
+                System.out.println("Successfully connected to: " + DB_URL);
+            }else{
+                System.out.println("Ну не получилось, попробуйте в следующий раз");
+            }
+        }catch (SQLException e) {
             System.out.println("Unable to connect to database");
             System.exit(-1);
         }
+
     }
 
     public void disconnect() {

@@ -20,9 +20,9 @@ import java.text.ParsePosition;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-/**
- * Консольный менеджер
- */
+import static sun.security.krb5.Confounder.intValue;
+
+
 @Slf4j
 public class ConsoleManager {
 
@@ -69,23 +69,20 @@ public class ConsoleManager {
         return new Credentials(-1, username, password);
     }
 
-    /**
-     * получает введенные данные объектом
-     * @return
-     */
+
     public Pen getPen(){
         boolean exists = false;
 
         String name = readWithMessage("Enter pen name: ", false);
 
 
-        Double width_of_kernel = readWithParseMinMax("Enter width_of_kernel (Double, от нуля и больше): ", new BigDecimal(0), NumUtil.DOUBLE_MAX, false).doubleValue();
+        Double width_of_kernel = readWithParseMinMax("Enter width_of_kernel (Double, от нуля до 2 ): ", new BigDecimal(0), new BigDecimal(2), false).doubleValue();
 
-        Number pop = readWithParseMinMax("Enter amount (int, [0; MAX_INTEGER]): ", new BigDecimal(0), NumUtil.INTEGER_MAX, true);
+        Number pop = readWithParseMinMax("Enter amount (int, [1; 200]): ", new BigDecimal(1),  new BigDecimal(200), true);
         int amount = pop == null ? (int) 0L : pop.intValue();
 
-        int length_of_kernel = readWithParse("Enter length_of_kernel (int): ", false).intValue();
-        Double weight = readWithParseMinMax("Enter weight (Double, [-13;15]): ", new BigDecimal(-13), new BigDecimal(15), false).doubleValue();
+        Double length_of_kernel = readWithParseMinMax("Enter length_of_kernel (Double):[8;16] ",  new BigDecimal(8) ,new BigDecimal(16),false ).doubleValue();
+        Double weight = readWithParseMinMax("Enter weight (Double, [1;15]): ", new BigDecimal(1), new BigDecimal(15), false).doubleValue();
         while (true) {
             try {
                 exists = parseBoolean(readWithMessage("It is exists? (true/false): ", false));
@@ -106,11 +103,7 @@ public class ConsoleManager {
 
 
 
-    /**
-     * парсит boolean значение из сотроки
-     * @param s
-     * @return
-     */
+
     public static boolean parseBoolean(String s) {
         if ("true".equals(s.toLowerCase())) {
             return true;
@@ -122,12 +115,7 @@ public class ConsoleManager {
     }
 
 
-    /**
-     * выводит сообщение с вводом от пользователя
-     * @param message
-     * @param canNull
-     * @return
-     */
+
     public String readWithMessage(String message, boolean canNull) {
         String output = "";
 

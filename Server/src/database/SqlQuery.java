@@ -2,7 +2,7 @@ package database;
 
 public class SqlQuery {
     public static class Get {
-        //City
+
         public static final String PEN = "SELECT pen.id, pen.name, pen.creation_date, pen.width_of_kernel, pen.amount, pen.length_of_kernel, pen.weight, pen.exists\n" +
                 "FROM pen\n";
 
@@ -20,7 +20,7 @@ public class SqlQuery {
         //City
         public static final String PEN = "" +
                 "INSERT INTO pen(name, creation_date, width_of_kernel, amount, length_of_kernel, weight, exists)\n"+
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+                "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
 
 

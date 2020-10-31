@@ -21,9 +21,7 @@ class LocalDateAdapter extends XmlAdapter<String, LocalDate> implements Serializ
     }
 }
 
-/**
- * Модель города
- */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Pen implements Comparable, Serializable {
     private Long id;
@@ -34,14 +32,14 @@ public class Pen implements Comparable, Serializable {
 
     private Double width_of_kernel;
     private int amount;
-    private int length_of_kernel;
+    private Double length_of_kernel;
     private double weight;
     private boolean exists;
 
 
 
     public Pen(){}
-    public Pen(String name,  Double width_of_kernel, int amount, int length_of_kernel, double weight, boolean exists){
+    public Pen(String name, Double width_of_kernel, int amount, Double length_of_kernel, double weight, boolean exists){
         //this.id = id;
         this.name = name;
 
@@ -56,7 +54,7 @@ public class Pen implements Comparable, Serializable {
     }
 
 
-    public Pen(Long id, String name,  LocalDate creationDate,  Double width_of_kernel, int amount, int length_of_kernel, double weight, boolean exists){
+    public Pen(Long id, String name, LocalDate creationDate, Double width_of_kernel, int amount, Double length_of_kernel, double weight, boolean exists){
         this.id = id;
         this.name = name;
         this.creationDate = LocalDate.now();
@@ -142,11 +140,11 @@ public class Pen implements Comparable, Serializable {
         this.amount = amount;
     }
 
-    public int getLength_of_kernel() {
+    public Double getLength_of_kernel() {
         return length_of_kernel;
     }
 
-    public void setLength_of_kernel(int length_of_kernel) {
+    public void setLength_of_kernel(Double length_of_kernel) {
         this.length_of_kernel = length_of_kernel;
     }
 

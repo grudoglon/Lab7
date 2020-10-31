@@ -3,7 +3,6 @@ package managers;
 import models.Pens;
 import models.Pen;
 import exceptions.DuplicateIdException;
-
 import javax.xml.bind.*;
 import java.io.*;
 import java.time.LocalDate;
@@ -20,11 +19,7 @@ public class CollectionManager {
     private Long maxId = 0L;
     private List<Pen> collection;
 
-    /**
-     * Класс, который работает с коллекцией
-     * @param fileName
-     * @throws IOException
-     */
+
     public CollectionManager(String fileName) throws IOException {
         if (fileName != null) {
             xmlCollection = new File(fileName);
@@ -51,25 +46,19 @@ public class CollectionManager {
 
     public CollectionManager(ArrayList<Pen> collection){
         this.initDate = LocalDate.now();
+
         this.collection = Collections.synchronizedList(collection);
         this.maxId = (long) (collection.size() + 1);
     }
 
-    /**
-     * добавляет новый элемент
-     * @param pen
-     */
+
     public void addElement(Pen pen){
         maxId+=1;
 
         this.getPenCollection().add(pen);
     }
 
-    /**
-     * добавляет новый элемент с условием
-     * @param pen
-     * @return
-     */
+
     public boolean addIfMin(Pen pen){
         List<Pen> cities = this.getPenCollection().stream().sorted().collect(Collectors.toList());
         if (cities.isEmpty()) {
@@ -98,10 +87,7 @@ public class CollectionManager {
     }
 
 
-    /**
-     * удаляет элемент коллекции
-     * @param id
-     */
+
     public boolean remove(long id){
         if(this.checkIdExist(id)) {
             Map.Entry<Integer, Pen> entry = findById(id).entrySet().iterator().next();
@@ -112,11 +98,7 @@ public class CollectionManager {
         return false;
     }
 
-    /**
-     * обновляет коллекцию по его id
-     * @param pen
-     * @param id
-     */
+
     public boolean update(Pen pen, Long id){
         if(this.checkIdExist(id)) {
             Map.Entry<Integer, Pen> entry = findById(id).entrySet().iterator().next();
@@ -145,11 +127,7 @@ public class CollectionManager {
         return false;
     }
 
-    /**
-     * ищет элемент по id
-     * @param id
-     * @return
-     */
+
     private Map<Integer, Pen> findById(Long id){
         Map<Integer, Pen> map = new HashMap<>();
         for(int i=0;i<this.getPenCollection().size();i++) {
@@ -162,25 +140,17 @@ public class CollectionManager {
         return null;
     }
 
-    /**
-     * находит элементы по его имени
-     * @param name
-     * @return
-     */
+
     public ArrayList<Pen> findByName(String name){
         ArrayList<Pen> cities = new ArrayList<Pen>();
         this.getPenCollection().forEach(x ->{
             if(x.getName().contains(name))
                 cities.add(x);
         });
-
         return cities;
     }
 
-    /**
-     * загрузка xml из файла
-     * @throws IOException
-     */
+
     private void load() throws IOException {
         try{
             if(!xmlCollection.canWrite() || !xmlCollection.canRead()) throw new SecurityException();
@@ -209,17 +179,13 @@ public class CollectionManager {
         }
     }
 
-    /**
-     * очищает коллекцию
-     */
+
     public void clear(){
         this.getPenCollection().clear();
     }
 
 
-    /**
-     * сохранить коллекцию в xml
-     */
+
     public void save(){
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(xmlCollection));
@@ -232,9 +198,7 @@ public class CollectionManager {
         }
     }
 
-    /**
-     * перемешивает элементы в случайном порядке
-     */
+
     public void shuffle(){
         Collections.shuffle(this.getPenCollection());
     }
@@ -246,10 +210,7 @@ public class CollectionManager {
         return sortColl;
     }
 
-    /**
-     * сортирует по часовому поясу
-     * @return
-     */
+
     public ArrayList<Pen> sortByWeight(){
         ArrayList<Pen> sortColl = new ArrayList<Pen>(this.getPenCollection());
         sortColl.sort(Comparator.comparing(Pen::getWeight));
@@ -257,9 +218,7 @@ public class CollectionManager {
         return sortColl;
     }
 
-    /**
-     * находит элементы с одинаковыми id
-     */
+
     private void checkDuplicateId(){
         List<Pen> cities = sortById();
 
@@ -269,8 +228,6 @@ public class CollectionManager {
             }
         }
     }
-
-
 
     public List<Pen> getPenCollection() {
         return collection;

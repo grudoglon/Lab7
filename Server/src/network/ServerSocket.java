@@ -42,7 +42,6 @@ public class ServerSocket {
     public void sendResponse(Object response, SocketAddress client) {
         try(ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             ObjectOutputStream objectStream = new ObjectOutputStream(byteArrayStream)) {
-
             objectStream.writeObject(response);
             System.out.println("send object " + response.toString());
             System.out.println("send object " + response.toString());

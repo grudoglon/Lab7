@@ -13,9 +13,10 @@ public class ShuffleCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
-        collectionManager.shuffle();
-        consoleManager.writeln("Коллекция была перемешана в случайном порядке");
-
+        if (credentials.username != null && credentials.password != null){
+            collectionManager.shuffle();
+            consoleManager.writeln("Коллекция была перемешана в случайном порядке");
+        }
         return null;
     }
 }

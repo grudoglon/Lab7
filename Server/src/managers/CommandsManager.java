@@ -5,9 +5,7 @@ import exceptions.InvalidValueException;
 import exceptions.NoCommandException;
 import java.util.*;
 
-/**
- * Менеджер команд
- */
+
 public class CommandsManager {
     private static CommandsManager instance;
 
@@ -59,12 +57,7 @@ public class CommandsManager {
         return cmd;
     }
 
-    /**
-     * Выполняет команды введенные пользователем
-     * @param str
-     * @param consoleManager
-     * @param collectionManager
-     */
+
     public void execute(String str, ConsoleManager consoleManager, CollectionManager collectionManager){
         //parseCommand(str).execute(consoleManager, collectionManager);
     }

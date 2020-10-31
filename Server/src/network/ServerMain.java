@@ -42,14 +42,12 @@ public class ServerMain {
 
             final DBConfigure dbConfigure = new DBConfigure();
             dbConfigure.connect();
-
             final CollectionDBManager collectionDBManager = new CollectionDBManager(dbConfigure.getDbConnection());
             final UserDBManager userDBManager = new UserDBManager(dbConfigure.getDbConnection());
             final DatabaseController controller = new DatabaseController(collectionDBManager, userDBManager);
-
             final CollectionManager collectionManager = new CollectionManager(controller.getCollectionFromDB());
-
             final ServerHandler serverHandler = new ServerHandler(socket, collectionManager, controller);
+
 
             if (socket.getSocket().isBound()) {
                 System.out.println("Socket Successfully opened on " + address);
@@ -65,9 +63,6 @@ public class ServerMain {
             }));
 
             serverHandler.receiveFromWherever();
-
-            while (socket.getSocket().isBound()) {
-            }
 
         } catch (SQLException | SocketException e) {
             e.printStackTrace();

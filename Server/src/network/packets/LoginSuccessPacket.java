@@ -2,7 +2,7 @@ package network.packets;
 
 import java.io.Serializable;
 
-public class LoginSuccessPacket implements Serializable {
+public class  LoginSuccessPacket implements Serializable {
 
     private final String message;
 

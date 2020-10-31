@@ -1,8 +1,6 @@
 package database;
 
 import models.Pen;
-
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,23 +26,18 @@ public class CollectionDBManager {
                     creationDate,
                     rs.getDouble("width_of_kernel"),
                     rs.getInt("amount"),
-                    rs.getInt("length_of_kernel"),
+                    rs.getDouble("length_of_kernel"),
                     rs.getDouble("weight"),
                     rs.getBoolean("exists")
-
-
             );
-
             collection.add(pen);
         }
-
         return collection;
     }
 
     public boolean hasPermissions(Credentials credentials, int penID) throws SQLException {
         if (credentials.username.equals(UserDBManager.ROOT_USERNAME))
             return true;
-
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.Get.USER_HAS_PERMISSIONS);
         int pointer = 0;
         preparedStatement.setInt(1, credentials.id);
@@ -66,7 +59,7 @@ public class CollectionDBManager {
             preparedStatement.setTimestamp(2, Timestamp.valueOf(pen.getCreationDate().atStartOfDay()));
             preparedStatement.setDouble(3, pen.getWidth_of_kernel());
             preparedStatement.setInt(4, pen.getAmount());
-            preparedStatement.setInt(5, pen.getLength_of_kernel());
+            preparedStatement.setDouble(5, pen.getLength_of_kernel());
             preparedStatement.setDouble(6, pen.getWeight());
             preparedStatement.setBoolean(7, pen.getExists());
             ResultSet rs = preparedStatement.executeQuery();
@@ -74,11 +67,8 @@ public class CollectionDBManager {
             if (rs.next())
                 penID = rs.getInt(1);
 
-
-
             preparedStatement.setInt(3, penID);
             preparedStatement.executeUpdate();
-
 
             preparedStatement.setInt(1, penID);
             preparedStatement.executeUpdate();
@@ -113,7 +103,7 @@ public class CollectionDBManager {
             preparedStatement.setTimestamp(2, Timestamp.valueOf(pen.getCreationDate().atStartOfDay()));
             preparedStatement.setDouble(3, pen.getWidth_of_kernel());
             preparedStatement.setInt(4, pen.getAmount());
-            preparedStatement.setInt(5, pen.getLength_of_kernel());
+            preparedStatement.setDouble(5, pen.getLength_of_kernel());
             preparedStatement.setDouble(6, pen.getWeight());
             preparedStatement.setBoolean(7, pen.getExists());
             preparedStatement.setInt(8, id);

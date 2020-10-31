@@ -16,10 +16,7 @@ import java.io.*;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Slf4j
 public class ServerHandler {
@@ -75,34 +72,30 @@ public class ServerHandler {
 
     private final ServerSocket socket;
     private final RequestReceiver requestReceiver;
-    private final ForkJoinPool executor;
-    private final ConsoleManager consoleManager;
+    private final ExecutorService executor;
     private final CollectionManager collectionManager;
     private final DatabaseController databaseController;
-    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    public ServerHandler(ServerSocket socket, CollectionManager collectionManager, DatabaseController databaseController) {
+    public ServerHandler(ServerSocket socket, CollectionManager collectionManager, DatabaseController databaseController){
         this.socket = socket;
-        this.consoleManager = new ConsoleManager(new InputStreamReader(System.in), new OutputStreamWriter(outputStream), false);
         this.collectionManager = collectionManager;
         this.databaseController = databaseController;
 
         requestReceiver = new RequestReceiver();
         requestReceiver.setName("ServerReceiverThread");
-        executor = new ForkJoinPool();
+        executor = Executors.newFixedThreadPool(16);
     }
 
     public void receiveFromWherever() {
         requestReceiver.start();
     }
 
-    /**
-     * Создание ForkJoinPool для обработки полученных запросов
-     * @param obj
-     * @param addressFromClient
-     */
+
     private void executeObj(Object obj, SocketAddress addressFromClient) {
         Future<Object> resulted = executor.submit(() -> {
+            //TODO: для каждого запроса открывается свой outPutStream и закрывается в конце
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ConsoleManager consoleManager = new ConsoleManager(new InputStreamReader(System.in), new OutputStreamWriter(outputStream), false);
             Object responseExecution;
             if (obj instanceof String)
                 responseExecution = obj;
@@ -125,6 +118,7 @@ public class ServerHandler {
                 }
             }
             socket.sendResponse(responseExecution, addressFromClient);
+            outputStream.close();
             return responseExecution;
         });
 

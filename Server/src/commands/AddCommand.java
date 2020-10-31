@@ -25,10 +25,10 @@ public class AddCommand extends AbstractCommand {
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
         String penID = databaseController.addPen((Pen) inputData, credentials);
-        if (isNumeric(penID)) {
+        if (isNumeric(penID) && credentials.username != null && credentials.password != null) {
             ((Pen) inputData).setId(Long.valueOf(penID));
             collectionManager.addElement((Pen) inputData);
-            consoleManager.writeln("New city added");
+            consoleManager.writeln("New pen added");
         }
 
         inputData = null;

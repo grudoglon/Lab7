@@ -21,15 +21,15 @@ public class RemoveLowerCommand extends AbstractCommand {
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
         if(needInput && inputData == null) inputData = this.getInput(consoleManager);
+        if(credentials.username != null && credentials.password != null) {
+            int initSize = collectionManager.getPenCollection().size();
+            collectionManager.removeLower((Pen) inputData);
+            int afterSize = collectionManager.getPenCollection().size();
 
-        int initSize = collectionManager.getPenCollection().size();
-        collectionManager.removeLower((Pen) inputData);
-        int afterSize = collectionManager.getPenCollection().size();
+            consoleManager.writeln("Было удалено " + (initSize - afterSize) + " элементов");
 
-        consoleManager.writeln("Было удалено " + (initSize - afterSize) + " элементов");
-
-        inputData = null;
-
+            inputData = null;
+        }
         return null;
     }
 }
