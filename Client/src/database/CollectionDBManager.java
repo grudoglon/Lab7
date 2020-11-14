@@ -21,7 +21,7 @@ public class CollectionDBManager {
             LocalDate creationDate = rs.getTimestamp("creation_date").toLocalDateTime().toLocalDate();
 
             Pen pen= new Pen(
-                    rs.getLong("id"),
+                     rs.getInt("id"),
                     rs.getString("name"),
                     creationDate,
                     rs.getDouble("width_of_kernel"),

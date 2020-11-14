@@ -9,8 +9,8 @@ public class AppConstant {
 
     public final static String VERSION = "0.3";
 
-//    public final static String DB_URL = "jdbc:postgresql://pg:5432/studs";
-    public final static String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
+    public final static String DB_URL = "jdbc:postgresql://pg:5432/studs";
+//    public final static String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
 
 
 }

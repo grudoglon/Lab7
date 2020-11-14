@@ -20,7 +20,7 @@ public class ServerSocket {
     public ServerSocket(InetSocketAddress a) throws SocketException {
         socket = new DatagramSocket(a);
         socket.setSoTimeout(SOCKET_TIMEOUT);
-        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(5);
+        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(2);
     }
 
     public void sendDatagram(byte[] content, SocketAddress client) throws IOException {

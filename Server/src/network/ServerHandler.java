@@ -56,10 +56,7 @@ public class ServerHandler {
                 }
             }
 
-            /**
-             * Функция для десериализации данных
-             * @param petitionBytes - полученные данные
-             */
+
             private void processRequest(byte[] petitionBytes, SocketAddress addressFromClient) throws IOException, ClassNotFoundException {
                 try (ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(petitionBytes))) {
                     final Object obj = stream.readObject();
@@ -93,6 +90,7 @@ public class ServerHandler {
 
 
     private void executeObj(Object obj, SocketAddress addressFromClient) throws IOException {
+        //Future<Object> resulted=
         executor.submit(() -> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ConsoleManager consoleManager = new ConsoleManager(new InputStreamReader(System.in), new OutputStreamWriter(outputStream), false);
