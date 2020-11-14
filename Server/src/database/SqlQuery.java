@@ -41,7 +41,8 @@ public class SqlQuery {
 
     }
     public static class Delete {
-        public static final String ALL_PEN = "DELETE FROM pen";
+        public static final String GET_ALL_PEN_ID = "select * from users_pen where user_id = ?";
+
         public static final String PEN_BY_ID = "DELETE FROM pen where id = ?";
 
         public static final String USER = "DELETE FROM users where username = ?";

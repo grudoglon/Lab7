@@ -1,8 +1,11 @@
 package managers;
 
+import database.Credentials;
 import models.Pens;
 import models.Pen;
 import exceptions.DuplicateIdException;
+
+import javax.swing.*;
 import javax.xml.bind.*;
 import java.io.*;
 import java.time.LocalDate;
@@ -16,7 +19,7 @@ public class CollectionManager {
     private LocalDate initDate;
     private Pens pensArray;
     private File xmlCollection;
-    private Long maxId = 0L;
+    private Integer maxId;
     private List<Pen> collection;
 
 
@@ -48,7 +51,7 @@ public class CollectionManager {
         this.initDate = LocalDate.now();
 
         this.collection = Collections.synchronizedList(collection);
-        this.maxId = (long) (collection.size() + 1);
+        this.maxId = (collection.size() + 1);
     }
 
 
@@ -60,12 +63,12 @@ public class CollectionManager {
 
 
     public boolean addIfMin(Pen pen){
-        List<Pen> cities = this.getPenCollection().stream().sorted().collect(Collectors.toList());
-        if (cities.isEmpty()) {
+        List<Pen> pens = this.getPenCollection().stream().sorted().collect(Collectors.toList());
+        if (pens.isEmpty()) {
             return false;
         }
 
-        Pen firstPen = cities.get(0);
+        Pen firstPen = pens.get(0);
         if (firstPen.compareTo(pen) > 0) {
             addElement(pen);
             return true;
@@ -77,13 +80,16 @@ public class CollectionManager {
 
 
 
-    public void removeLower(Pen pen){
-        List<Pen> cities = this.getPenCollection().stream().sorted().collect(Collectors.toList());
-        cities.forEach(x -> {
+    public ArrayList<Integer> removeLower(Pen pen){
+        List<Pen> pens = this.getPenCollection().stream().sorted().collect(Collectors.toList());
+        ArrayList<Integer> arr = new ArrayList<>();
+        pens.forEach(x -> {
             if(x.compareTo(pen) < 0){
+                arr.add(x.getId());
                 this.getPenCollection().remove(x);
             }
         });
+        return arr;
     }
 
 
@@ -142,12 +148,12 @@ public class CollectionManager {
 
 
     public ArrayList<Pen> findByName(String name){
-        ArrayList<Pen> cities = new ArrayList<Pen>();
+        ArrayList<Pen> pens = new ArrayList<Pen>();
         this.getPenCollection().forEach(x ->{
             if(x.getName().contains(name))
-                cities.add(x);
+                pens.add(x);
         });
-        return cities;
+        return pens;
     }
 
 
@@ -165,8 +171,8 @@ public class CollectionManager {
             JAXBContext jaxbContext = JAXBContext.newInstance(Pens.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             pensArray = (Pens) jaxbUnmarshaller.unmarshal(inputStreamReader);
-            collection = pensArray.getCities();
-            pensArray.getCities().forEach(x-> {
+            collection = pensArray.getPens();
+            pensArray.getPens().forEach(x-> {
                 if(maxId < x.getId())
                     maxId = x.getId();
             });
@@ -180,11 +186,15 @@ public class CollectionManager {
     }
 
 
-    public void clear(){
-        this.getPenCollection().clear();
+    public void clear(Credentials credentials){
+        Iterator<Pen> it = this.getPenCollection().iterator();
+        while (it.hasNext()) {
+            if (credentials.getPenID().contains(it.next().getId())){
+                it.remove();
+            }
+        }
+
     }
-
-
 
     public void save(){
         try {
@@ -220,10 +230,10 @@ public class CollectionManager {
 
 
     private void checkDuplicateId(){
-        List<Pen> cities = sortById();
+        List<Pen> pens = sortById();
 
-        for(int i=1;i<cities.size();i++) {
-            if(cities.get(i-1).getId().equals(cities.get(i).getId())) {
+        for(int i=1;i<pens.size();i++) {
+            if(pens.get(i-1).getId().equals(pens.get(i).getId())) {
                 throw new DuplicateIdException("Поле id должно быть уникальным");
             }
         }

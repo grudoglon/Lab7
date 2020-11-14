@@ -96,13 +96,12 @@ public class ConsoleManager {
 
 
 
-        return new Pen(-1L, name, LocalDate.now(), width_of_kernel, amount, length_of_kernel, weight, exists);
+        return new Pen(-1, name, LocalDate.now(), width_of_kernel, amount, length_of_kernel, weight, exists);
     }
 
-
-
-
-
+    public Pen getRemoveLowerPen(){
+        return new Pen(-1, "somename", LocalDate.now(), readWithParseMinMax("Enter width_of_kernel (Double, от нуля до 2 ): ", new BigDecimal(0), new BigDecimal(2), false).doubleValue(), 1, 11d, 11, true );
+    }
 
     public static boolean parseBoolean(String s) {
         if ("true".equals(s.toLowerCase())) {

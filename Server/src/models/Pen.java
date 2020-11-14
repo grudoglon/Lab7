@@ -24,7 +24,7 @@ class LocalDateAdapter extends XmlAdapter<String, LocalDate> implements Serializ
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Pen implements Comparable, Serializable {
-    private Long id;
+    private Integer id;
     private String name;
 
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
@@ -54,7 +54,7 @@ public class Pen implements Comparable, Serializable {
     }
 
 
-    public Pen(Long id, String name, LocalDate creationDate, Double width_of_kernel, int amount, Double length_of_kernel, double weight, boolean exists){
+    public Pen(Integer id, String name, LocalDate creationDate, Double width_of_kernel, int amount, Double length_of_kernel, double weight, boolean exists){
         this.id = id;
         this.name = name;
         this.creationDate = LocalDate.now();
@@ -98,11 +98,11 @@ public class Pen implements Comparable, Serializable {
     }
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -31,9 +31,7 @@ public class CommandsManager {
         addCommand(new UpdateIdCommand());
         addCommand(new RemoveIdCommand());
         addCommand(new ClearCommad());
-        //addCommand(new ShuffleCommand());
-        //addCommand(new AddIfMinCommand());
-       ;
+        addCommand(new RemoveLowerCommand());
     }
 
     private void addCommand(AbstractCommand cmd){

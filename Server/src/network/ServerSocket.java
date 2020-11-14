@@ -15,35 +15,41 @@ public class ServerSocket {
     public static final int SOCKET_TIMEOUT = 3000;
 
     protected DatagramSocket socket;
-    protected ExecutorService executorService;
+    protected ThreadPoolExecutor executor;
 
     public ServerSocket(InetSocketAddress a) throws SocketException {
         socket = new DatagramSocket(a);
         socket.setSoTimeout(SOCKET_TIMEOUT);
-        this.executorService = Executors.newFixedThreadPool(16);
+        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(5);
     }
 
     public void sendDatagram(byte[] content, SocketAddress client) throws IOException {
-        DatagramPacket packet = new DatagramPacket(content, content.length, client);
-        socket.send(packet);
+        executor.submit(() -> {
+            DatagramPacket packet = new DatagramPacket(content, content.length, client);
+            try {
+                socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        System.out.println("Sent datagram from SERVER to " + client);
+            System.out.println("Sent datagram from SERVER to " + client);
+        });
     }
 
     public SocketAddress receiveDatagram(ByteBuffer buffer) throws IOException {
-        byte[] buf = new byte[buffer.remaining()];
+            byte[] buf = new byte[buffer.remaining()];
 
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);
-        socket.receive(packet);
+            DatagramPacket packet = new DatagramPacket(buf, buf.length);
+            socket.receive(packet);
 
-        System.out.println("\nReceived datagram in SERVER from " + packet.getSocketAddress());
-        System.out.println("Received datagram in SERVER from " + packet.getSocketAddress());
-        buffer.put(buf, 0, packet.getLength());
-        return packet.getSocketAddress();
+            System.out.println("\nReceived datagram in SERVER from " + packet.getSocketAddress());
+            System.out.println("Received datagram in SERVER from " + packet.getSocketAddress());
+            buffer.put(buf, 0, packet.getLength());
+            return packet.getSocketAddress();
     }
 
     public void sendResponse(Object response, SocketAddress client) {
-        Future<Object> resulted = (Future<Object>) executorService.submit(() -> {
+       executor.submit(() -> {
             try (ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
                  ObjectOutputStream objectStream = new ObjectOutputStream(byteArrayStream)) {
                 objectStream.writeObject(response);

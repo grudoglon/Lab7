@@ -16,7 +16,7 @@ public class ClearCommad extends AbstractCommand {
 
         String retDelAll = databaseController.clearPen(credentials);
         if (retDelAll == null && credentials.username != null && credentials.password != null) {
-            collectionManager.clear();
+            collectionManager.clear(credentials);
             consoleManager.writeln("All elements deleted");
         }else{
             consoleManager.writeln("Problem: " + retDelAll);
@@ -25,3 +25,5 @@ public class ClearCommad extends AbstractCommand {
         return null;
     }
 }
+
+

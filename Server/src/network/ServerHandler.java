@@ -20,59 +20,60 @@ import java.util.concurrent.*;
 
 @Slf4j
 public class ServerHandler {
-    /**
-     * Создание нового потока для получения данных
-     */
+
     private class RequestReceiver extends Thread {
+       @Override
+            public void run() {
+                while (true) {
+                    try {
+                        receiveData();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-        @Override
-        public void run() {
-            while (true) {
-                receiveData();
+            /**
+             * Функция для получения данных
+             */
+            public void receiveData() throws IOException {
+                SocketAddress addressFromClient = null;
+                try {
+                    final ByteBuffer buf = ByteBuffer.allocate(AppConstant.MESSAGE_BUFFER);
+                    addressFromClient = socket.receiveDatagram(buf);
+                    buf.flip();
+                    final byte[] petitionBytes = new byte[buf.remaining()];
+                    buf.get(petitionBytes);
+
+                    if (petitionBytes.length > 0)
+                        processRequest(petitionBytes, addressFromClient);
+
+                } catch (SocketTimeoutException ignored) {
+                } catch (IOException | ClassNotFoundException e) {
+                    System.err.println("Weird errors, check log");
+                    System.out.println("Weird errors processing the received data");
+                    executeObj("Weird errors, check log. " + e.getMessage(), addressFromClient);
+                }
+            }
+
+            /**
+             * Функция для десериализации данных
+             * @param petitionBytes - полученные данные
+             */
+            private void processRequest(byte[] petitionBytes, SocketAddress addressFromClient) throws IOException, ClassNotFoundException {
+                try (ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(petitionBytes))) {
+                    final Object obj = stream.readObject();
+                    System.out.println("received object: " + obj);
+                    if (obj == null)
+                        throw new ClassNotFoundException();
+                    executeObj(obj, addressFromClient);
+                }
             }
         }
-
-        /**
-         * Функция для получения данных
-         */
-        public void receiveData() {
-            SocketAddress addressFromClient = null;
-            try {
-                final ByteBuffer buf = ByteBuffer.allocate(AppConstant.MESSAGE_BUFFER);
-                addressFromClient = socket.receiveDatagram(buf);
-                buf.flip();
-                final byte[] petitionBytes = new byte[buf.remaining()];
-                buf.get(petitionBytes);
-
-                if (petitionBytes.length > 0)
-                    processRequest(petitionBytes, addressFromClient);
-
-            } catch (SocketTimeoutException ignored) {
-            } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Weird errors, check log");
-                System.out.println("Weird errors processing the received data");
-                executeObj("Weird errors, check log. " + e.getMessage(), addressFromClient);
-            }
-        }
-
-        /**
-         * Функция для десериализации данных
-         * @param petitionBytes - полученные данные
-         */
-        private void processRequest(byte[] petitionBytes, SocketAddress addressFromClient) throws IOException, ClassNotFoundException {
-            try (ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(petitionBytes))) {
-                final Object obj = stream.readObject();
-                System.out.println("received object: " + obj);
-                if (obj == null)
-                    throw new ClassNotFoundException();
-                executeObj(obj, addressFromClient);
-            }
-        }
-    }
 
     private final ServerSocket socket;
     private final RequestReceiver requestReceiver;
-    private final ExecutorService executor;
+    private final ThreadPoolExecutor executor;
     private final CollectionManager collectionManager;
     private final DatabaseController databaseController;
 
@@ -83,7 +84,7 @@ public class ServerHandler {
 
         requestReceiver = new RequestReceiver();
         requestReceiver.setName("ServerReceiverThread");
-        executor = Executors.newFixedThreadPool(16);
+        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(5);
     }
 
     public void receiveFromWherever() {
@@ -91,9 +92,8 @@ public class ServerHandler {
     }
 
 
-    private void executeObj(Object obj, SocketAddress addressFromClient) {
-        Future<Object> resulted = executor.submit(() -> {
-            //TODO: для каждого запроса открывается свой outPutStream и закрывается в конце
+    private void executeObj(Object obj, SocketAddress addressFromClient) throws IOException {
+        executor.submit(() -> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ConsoleManager consoleManager = new ConsoleManager(new InputStreamReader(System.in), new OutputStreamWriter(outputStream), false);
             Object responseExecution;
@@ -105,11 +105,13 @@ public class ServerHandler {
                 try {
                     outputStream.reset();
                     Object retObj = command.execute(consoleManager, collectionManager, databaseController, credentials);
-                    if(retObj instanceof Credentials){
+                    Object login = databaseController.login(credentials);
+                    if(retObj instanceof Credentials && login instanceof Credentials){
                         responseExecution = new CommandExecutionPacket(retObj);
                     }else if(retObj != null){
                         responseExecution = new CommandExecutionPacket(retObj);
-                    }else {
+                    }
+                    else {
                         responseExecution = new CommandExecutionPacket(new String(outputStream.toByteArray()));
                     }
                 } catch (InvalidValueException ex) {
@@ -122,12 +124,12 @@ public class ServerHandler {
             return responseExecution;
         });
 
-        try {
-            System.out.println("Object gotten from executor: \n" + resulted.get().toString());
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Error getting result from executor");
-            System.out.println("Error getting result from executor: " + e.getMessage());
-        }
+//        try {
+//            System.out.println("Object gotten from executor: \n" + resulted.get().toString());
+//        } catch (InterruptedException | ExecutionException e) {
+//            System.out.println("Error getting result from executor");
+//            System.out.println("Error getting result from executor: " + e.getMessage());
+//        }
     }
 
     public void disconnect() {

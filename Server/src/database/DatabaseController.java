@@ -26,6 +26,7 @@ public class DatabaseController {
     public Object login(Credentials credentials) {
         try {
             int id = userDBManager.checkUserAndGetID(credentials);
+            System.out.println("ПРОВЕРКА ЕСТЬ ЛИ ТАКОЙ ПОЛЬЗОВАТЕЛЬ В БД " + id);
             if (id > 0)
                 return new Credentials(id, credentials.username, credentials.password);
             else

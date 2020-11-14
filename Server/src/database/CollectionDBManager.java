@@ -21,7 +21,7 @@ public class CollectionDBManager {
             LocalDate creationDate = rs.getTimestamp("creation_date").toLocalDateTime().toLocalDate();
 
             Pen pen= new Pen(
-                    rs.getLong("id"),
+                    rs.getInt("id"),
                     rs.getString("name"),
                     creationDate,
                     rs.getDouble("width_of_kernel"),
@@ -137,14 +137,24 @@ public class CollectionDBManager {
     }
 
     public String deleteAll(Credentials credentials) throws SQLException {
-        if (!credentials.username.equals(UserDBManager.ROOT_USERNAME))
-            return "You don't have permissions to delete all database, only root";
 
         final boolean oldAutoCommit = connection.getAutoCommit();
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.Delete.ALL_PEN);
-            preparedStatement.executeUpdate();
+            ArrayList<Integer> arr = new ArrayList<>();
+            PreparedStatement prs = connection.prepareStatement(SqlQuery.Delete.GET_ALL_PEN_ID);
+            prs.setInt(1, credentials.id);
+            ResultSet rs1 = prs.executeQuery();
+            while(rs1.next()){
+                arr.add(rs1.getInt(2));
+                credentials.getPenID().add(rs1.getInt(2));
+            }
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.Delete.PEN_BY_ID);
+            for(Integer id : arr){
+                    preparedStatement.setInt(1, id);
+                    preparedStatement.executeUpdate();
+            }
             connection.commit();
             return null;
         } catch (Throwable e) {

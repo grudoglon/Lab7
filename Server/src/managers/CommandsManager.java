@@ -29,8 +29,8 @@ public class CommandsManager {
         addCommand(new UpdateIdCommand());
         addCommand(new RemoveIdCommand());
         addCommand(new ClearCommad());
-        //addCommand(new ShuffleCommand());
-        //addCommand(new AddIfMinCommand());
+        addCommand(new RemoveLowerCommand());
+
 
     }
 
@@ -59,7 +59,7 @@ public class CommandsManager {
 
 
     public void execute(String str, ConsoleManager consoleManager, CollectionManager collectionManager){
-        //parseCommand(str).execute(consoleManager, collectionManager);
+//        parseCommand(str).execute(consoleManager, collectionManager);
     }
 
 

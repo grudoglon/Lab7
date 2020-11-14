@@ -6,6 +6,8 @@ import models.Pen;
 import managers.CollectionManager;
 import managers.ConsoleManager;
 
+import java.util.ArrayList;
+
 public class RemoveLowerCommand extends AbstractCommand {
     public RemoveLowerCommand(){
         cmdName = "remove_lower";
@@ -15,21 +17,22 @@ public class RemoveLowerCommand extends AbstractCommand {
 
     @Override
     public Object getInput(ConsoleManager consoleManager){
-        return consoleManager.getPen();
+        return consoleManager.getRemoveLowerPen();
     }
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
         if(needInput && inputData == null) inputData = this.getInput(consoleManager);
+        if(credentials.username != null && credentials.password != null) {
+            int initSize = collectionManager.getPenCollection().size();
+            ArrayList<Integer> arr = collectionManager.removeLower((Pen) inputData);
+            for(Integer id : arr){ databaseController.removePen(id, credentials); }
+            int afterSize = collectionManager.getPenCollection().size();
 
-        int initSize = collectionManager.getPenCollection().size();
-        collectionManager.removeLower((Pen) inputData);
-        int afterSize = collectionManager.getPenCollection().size();
+            consoleManager.writeln("Было удалено " + (initSize - afterSize) + " элементов");
 
-        consoleManager.writeln("Было удалено " + (initSize - afterSize) + " элементов");
-
-        inputData = null;
-
+            inputData = null;
+        }
         return null;
     }
 }

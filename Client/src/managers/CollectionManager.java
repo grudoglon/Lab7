@@ -17,7 +17,7 @@ public class CollectionManager {
     private LocalDate initDate;
     private Pens pensArray;
     private File xmlCollection;
-    private Long maxId = 0L;
+    private Integer maxId = 0;
     private List<Pen> collection;
 
     /**
@@ -52,7 +52,7 @@ public class CollectionManager {
     public CollectionManager(ArrayList<Pen> collection){
         this.initDate = LocalDate.now();
         this.collection = Collections.synchronizedList(collection);
-        this.maxId = (long) (collection.size() + 1);
+        this.maxId = (collection.size() + 1);
     }
 
     /**
@@ -88,15 +88,17 @@ public class CollectionManager {
 
 
 
-    public void removeLower(Pen pen){
-        List<Pen> cities = this.getPenCollection().stream().sorted().collect(Collectors.toList());
-        cities.forEach(x -> {
+    public ArrayList<Integer> removeLower(Pen pen){
+        List<Pen> pens = this.getPenCollection().stream().sorted().collect(Collectors.toList());
+        ArrayList<Integer> arr = new ArrayList<>();
+        pens.forEach(x -> {
             if(x.compareTo(pen) < 0){
+                arr.add(x.getId());
                 this.getPenCollection().remove(x);
             }
         });
+        return arr;
     }
-
 
     /**
      * удаляет элемент коллекции

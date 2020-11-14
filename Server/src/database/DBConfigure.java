@@ -12,7 +12,7 @@ import static utils.AppConstant.*;
 public class DBConfigure {
 
     private Connection dbConnection = null;
-    //TODO: не забудь поменять system properties
+
     public void connect(){
         try {
             String login = System.getProperty("login");

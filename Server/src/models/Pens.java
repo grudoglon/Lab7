@@ -6,18 +6,18 @@
     import javax.xml.bind.annotation.XmlRootElement;
     import java.util.ArrayList;
 
-    @XmlRootElement(name = "cities")
+    @XmlRootElement(name = "pens")
     @XmlAccessorType(XmlAccessType.FIELD)
     public class Pens
     {
         @XmlElement(name = "pen")
-        private ArrayList<Pen> cities = new ArrayList<Pen>();
+        private ArrayList<Pen> pens = new ArrayList<Pen>();
 
-        public ArrayList<Pen> getCities() {
-            return cities;
+        public ArrayList<Pen> getPens() {
+            return pens;
         }
 
-        public void setCities(ArrayList<Pen> cities) {
-            this.cities = cities;
+        public void setPens(ArrayList<Pen> pens1) {
+            this.pens = pens1;
         }
     }

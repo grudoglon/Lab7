@@ -26,6 +26,8 @@ public class UserDBManager {
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.Get.PASS_USING_USERNAME);
         preparedStatement.setString(1, credentials.username);
         ResultSet rs = preparedStatement.executeQuery();
+        System.out.println("ПРОВЕРКА НА ЛОГИН И ПАРОЛЬ");
+        System.out.println("result set of users" + rs.toString());
         if (rs.next()) {
             if (hashPassword(credentials.password).equals(rs.getString(1)))
                 return rs.getInt(2);
