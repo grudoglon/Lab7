@@ -13,11 +13,11 @@
         @XmlElement(name = "pen")
         private ArrayList<Pen> pens = new ArrayList<Pen>();
 
-        public ArrayList<Pen> getCities() {
+        public ArrayList<Pen> getPens() {
             return pens;
         }
 
-        public void setCities(ArrayList<Pen> cities) {
-            this.pens = cities;
+        public void setPens(ArrayList<Pen> pens) {
+            this.pens = pens;
         }
     }

@@ -21,10 +21,11 @@ public class AddIfMinCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
+        Object login = databaseController.login(credentials);
         if(needInput && inputData == null) inputData = this.getInput(consoleManager);
         Boolean res = collectionManager.addIfMin((Pen) inputData);
 
-        if(res && credentials.username != null && credentials.password != null)
+        if(res && credentials.username != null && credentials.password != null && login instanceof Credentials)
             consoleManager.writeln("Элемент был добавлен");
         else
             consoleManager.writeln("Элемент не был добавлен. Элемент оказался больше минимального");

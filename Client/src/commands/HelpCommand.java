@@ -17,12 +17,12 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
-
-        List<AbstractCommand> aCommands = CommandsManager.getInstance().getAllCommands();
-        for (AbstractCommand cmd: aCommands){
-            consoleManager.writeln(cmd.getCmdName() + " - " + cmd.getDescription() );
+        if(credentials.username != null && credentials.password != null) {
+            List<AbstractCommand> aCommands = CommandsManager.getInstance().getAllCommands();
+            for (AbstractCommand cmd : aCommands) {
+                consoleManager.writeln(cmd.getCmdName() + " - " + cmd.getDescription());
+            }
         }
-
         return null;
     }
 }

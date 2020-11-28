@@ -14,7 +14,7 @@ public class SaveCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
-         if(credentials.username != null && credentials.password != null) {
+         if(credentials.username != null && credentials.password != null && databaseController.login(credentials) instanceof Credentials) {
              collectionManager.save();
              consoleManager.writeln("Коллекция была сохранена.");
          }

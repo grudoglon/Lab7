@@ -17,7 +17,7 @@ public class SqlQuery {
                 "SELECT exists(SELECT 1 from users_pen where user_id = ? AND pen_id = ?)";
     }
     public static class Add {
-        //City
+
         public static final String PEN = "" +
                 "INSERT INTO pen(name, creation_date, width_of_kernel, amount, length_of_kernel, weight, exists)\n"+
                 "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";

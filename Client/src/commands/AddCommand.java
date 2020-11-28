@@ -24,8 +24,9 @@ public class AddCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
+        Object login = databaseController.login(credentials);
         String penID = databaseController.addPen((Pen) inputData, credentials);
-        if (isNumeric(penID)) {
+        if (isNumeric(penID) && credentials.username != null && credentials.password != null && login instanceof Credentials) {
             ((Pen) inputData).setId(Integer.valueOf(penID));
             collectionManager.addElement((Pen) inputData);
             consoleManager.writeln("New pen added");

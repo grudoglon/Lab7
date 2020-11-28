@@ -24,12 +24,13 @@ public class RemoveIdCommand extends AbstractCommand {
             throw new InvalidValueException(e.getMessage());
         }
 
-        String cityID = databaseController.removePen(id, credentials);
-        if (cityID == null) {
+        Object login = databaseController.login(credentials);
+        String penID = databaseController.removePen(id, credentials);
+        if (penID == null && credentials.username != null && credentials.password != null && login instanceof Credentials) {
             if(collectionManager.remove(id)) consoleManager.writeln("Element with id(" + id + ") - successfully deleted");
             else consoleManager.writeln("Element with id(" + id + ") - doesn't exist");
         } else {
-            consoleManager.writeln("Have some problems: " + cityID);
+            consoleManager.writeln("Have some problems: " + penID);
         }
 
         return null;

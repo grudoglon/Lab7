@@ -29,14 +29,14 @@ public class UpdateIdCommand extends AbstractCommand {
             throw new InvalidValueException("Format error");
         }
 
-        String cityID = databaseController.updatePen(id, (Pen) inputData, credentials);
-        if (cityID == null && credentials.username != null && credentials.password != null) {
+        String penID = databaseController.updatePen(id, (Pen) inputData, credentials);
+        if (penID == null && credentials.username != null && credentials.password != null&& databaseController.login(credentials) instanceof Credentials) {
             if(collectionManager.update((Pen) inputData, (long)id))
                 consoleManager.writeln("Element with id(" + id + ") - edited");
             else
                 consoleManager.writeln("Element with id(" + id + ") - doesn't");
         } else {
-            consoleManager.writeln("Have some problems: " + cityID);
+            consoleManager.writeln("Have some problems: " + penID);
         }
 
         inputData = null;

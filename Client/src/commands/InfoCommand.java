@@ -14,10 +14,11 @@ public class InfoCommand extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
-        consoleManager.writeln("Type; " + collectionManager.getPenCollection().getClass().getName());
-        consoleManager.writeln("Count: " + collectionManager.getPenCollection().size());
-        consoleManager.writeln("Init date: " + collectionManager.getInitDate().toString());
-
+        if(credentials.username != null && credentials.password != null) {
+            consoleManager.writeln("Type; " + collectionManager.getPenCollection().getClass().getName());
+            consoleManager.writeln("Count: " + collectionManager.getPenCollection().size());
+            consoleManager.writeln("Init date: " + collectionManager.getInitDate().toString());
+        }
         return null;
     }
 }

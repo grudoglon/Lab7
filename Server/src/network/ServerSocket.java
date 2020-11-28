@@ -20,7 +20,7 @@ public class ServerSocket {
     public ServerSocket(InetSocketAddress a) throws SocketException {
         socket = new DatagramSocket(a);
         socket.setSoTimeout(SOCKET_TIMEOUT);
-        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(2);
+        executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(3);
     }
 
     public void sendDatagram(byte[] content, SocketAddress client) throws IOException {
@@ -37,15 +37,20 @@ public class ServerSocket {
     }
 
     public SocketAddress receiveDatagram(ByteBuffer buffer) throws IOException {
-            byte[] buf = new byte[buffer.remaining()];
+        byte[] buf = new byte[buffer.remaining()];
+        DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        executor.submit ( () -> {
+            try {
+                socket.receive(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            DatagramPacket packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-
-            System.out.println("\nReceived datagram in SERVER from " + packet.getSocketAddress());
-            System.out.println("Received datagram in SERVER from " + packet.getSocketAddress());
-            buffer.put(buf, 0, packet.getLength());
-            return packet.getSocketAddress();
+        });
+        System.out.println("\nReceived datagram in SERVER from " + packet.getSocketAddress());
+        System.out.println("Received datagram in SERVER from " + packet.getSocketAddress());
+        buffer.put(buf, 0, packet.getLength());
+        return packet.getSocketAddress(); 
     }
 
     public void sendResponse(Object response, SocketAddress client) {

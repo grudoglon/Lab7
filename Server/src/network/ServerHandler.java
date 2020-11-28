@@ -48,7 +48,7 @@ public class ServerHandler {
                     if (petitionBytes.length > 0)
                         processRequest(petitionBytes, addressFromClient);
 
-                } catch (SocketTimeoutException ignored) {
+                    } catch (SocketTimeoutException ignored) {
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Weird errors, check log");
                     System.out.println("Weird errors processing the received data");
@@ -102,8 +102,8 @@ public class ServerHandler {
                 Credentials credentials = ((CommandPacket) obj).getCredentials();
                 try {
                     outputStream.reset();
-                    Object retObj = command.execute(consoleManager, collectionManager, databaseController, credentials);
                     Object login = databaseController.login(credentials);
+                    Object retObj = command.execute(consoleManager, collectionManager, databaseController, credentials);
                     if(retObj instanceof Credentials && login instanceof Credentials){
                         responseExecution = new CommandExecutionPacket(retObj);
                     }else if(retObj != null){

@@ -7,9 +7,6 @@ import managers.ConsoleManager;
 
 import java.io.Serializable;
 
-/**
- * Абстрактный класс для команд
- */
 public abstract class AbstractCommand implements Serializable {
     int argCount = 0;
     String[] args;
@@ -19,11 +16,7 @@ public abstract class AbstractCommand implements Serializable {
     Object inputData = null;
 
     public AbstractCommand(){}
-    /**
-     *
-     * @param consoleManager управление консолью
-     * @param collectionManager управление коллекцией
-     */
+
     public abstract Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials);
 
     public Object getInput(ConsoleManager consoleManager){

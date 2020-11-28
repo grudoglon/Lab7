@@ -13,9 +13,9 @@ public class ClearCommad extends AbstractCommand {
 
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
-
+        Object login = databaseController.login(credentials);
         String retDelAll = databaseController.clearPen(credentials);
-        if (retDelAll == null && credentials.username != null && credentials.password != null) {
+        if (retDelAll == null && credentials.username != null && credentials.password != null && login instanceof Credentials) {
             collectionManager.clear(credentials);
             consoleManager.writeln("All elements deleted");
         }else{

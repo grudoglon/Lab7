@@ -26,6 +26,7 @@ public class DBConfigure {
             }
         }catch (SQLException e) {
             System.out.println("Unable to connect to database");
+            e.printStackTrace();
             System.exit(-1);
         }
 

@@ -71,12 +71,12 @@ public class CollectionManager {
      * @return
      */
     public boolean addIfMin(Pen pen){
-        List<Pen> cities = this.getPenCollection().stream().sorted().collect(Collectors.toList());
-        if (cities.isEmpty()) {
+        List<Pen> pens = this.getPenCollection().stream().sorted().collect(Collectors.toList());
+        if (pens.isEmpty()) {
             return false;
         }
 
-        Pen firstPen = cities.get(0);
+        Pen firstPen = pens.get(0);
         if (firstPen.compareTo(pen) > 0) {
             addElement(pen);
             return true;
@@ -170,13 +170,13 @@ public class CollectionManager {
      * @return
      */
     public ArrayList<Pen> findByName(String name){
-        ArrayList<Pen> cities = new ArrayList<Pen>();
+        ArrayList<Pen> pens = new ArrayList<Pen>();
         this.getPenCollection().forEach(x ->{
             if(x.getName().contains(name))
-                cities.add(x);
+                pens.add(x);
         });
 
-        return cities;
+        return pens;
     }
 
     /**
@@ -197,8 +197,8 @@ public class CollectionManager {
             JAXBContext jaxbContext = JAXBContext.newInstance(Pens.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             pensArray = (Pens) jaxbUnmarshaller.unmarshal(inputStreamReader);
-            collection = pensArray.getCities();
-            pensArray.getCities().forEach(x-> {
+            collection = pensArray.getPens();
+            pensArray.getPens().forEach(x-> {
                 if(maxId < x.getId())
                     maxId = x.getId();
             });
@@ -263,10 +263,10 @@ public class CollectionManager {
      * находит элементы с одинаковыми id
      */
     private void checkDuplicateId(){
-        List<Pen> cities = sortById();
+        List<Pen> pens = sortById();
 
-        for(int i=1;i<cities.size();i++) {
-            if(cities.get(i-1).getId().equals(cities.get(i).getId())) {
+        for(int i=1;i<pens.size();i++) {
+            if(pens.get(i-1).getId().equals(pens.get(i).getId())) {
                 throw new DuplicateIdException("Поле id должно быть уникальным");
             }
         }

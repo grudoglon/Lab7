@@ -23,7 +23,7 @@ public class RemoveLowerCommand extends AbstractCommand {
     @Override
     public Object execute(ConsoleManager consoleManager, CollectionManager collectionManager, DatabaseController databaseController, Credentials credentials) {
         if(needInput && inputData == null) inputData = this.getInput(consoleManager);
-        if(credentials.username != null && credentials.password != null) {
+        if(credentials.username != null && credentials.password != null && databaseController.login(credentials) instanceof Credentials) {
             int initSize = collectionManager.getPenCollection().size();
             ArrayList<Integer> arr = collectionManager.removeLower((Pen) inputData);
             for(Integer id : arr){ databaseController.removePen(id, credentials); }
