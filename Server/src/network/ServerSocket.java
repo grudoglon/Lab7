@@ -35,7 +35,6 @@ public class ServerSocket {
             System.out.println("Sent datagram from SERVER to " + client);
         });
     }
-
     public SocketAddress receiveDatagram(ByteBuffer buffer) throws IOException {
         byte[] buf = new byte[buffer.remaining()];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -50,8 +49,9 @@ public class ServerSocket {
         System.out.println("\nReceived datagram in SERVER from " + packet.getSocketAddress());
         System.out.println("Received datagram in SERVER from " + packet.getSocketAddress());
         buffer.put(buf, 0, packet.getLength());
-        return packet.getSocketAddress(); 
+        return packet.getSocketAddress();
     }
+
 
     public void sendResponse(Object response, SocketAddress client) {
        executor.submit(() -> {

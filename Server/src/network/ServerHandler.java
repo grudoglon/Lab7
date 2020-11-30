@@ -94,7 +94,7 @@ public class ServerHandler {
         executor.submit(() -> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ConsoleManager consoleManager = new ConsoleManager(new InputStreamReader(System.in), new OutputStreamWriter(outputStream), false);
-            Object responseExecution;
+            Object responseExecution = null;
             if (obj instanceof String)
                 responseExecution = obj;
             else {
@@ -103,13 +103,14 @@ public class ServerHandler {
                 try {
                     outputStream.reset();
                     Object login = databaseController.login(credentials);
-                    Object retObj = command.execute(consoleManager, collectionManager, databaseController, credentials);
-                    if(retObj instanceof Credentials && login instanceof Credentials){
-                        responseExecution = new CommandExecutionPacket(retObj);
-                    }else if(retObj != null){
-                        responseExecution = new CommandExecutionPacket(retObj);
-                    }
-                    else {
+                    if(login instanceof Credentials){
+                        Object retObj = command.execute(consoleManager, collectionManager, databaseController, credentials);
+                        if(retObj instanceof Credentials){
+                            responseExecution = new CommandExecutionPacket(retObj);
+                        }else if(retObj != null){
+                            responseExecution = new CommandExecutionPacket(retObj);
+                        }
+                    }else {
                         responseExecution = new CommandExecutionPacket(new String(outputStream.toByteArray()));
                     }
                 } catch (InvalidValueException ex) {

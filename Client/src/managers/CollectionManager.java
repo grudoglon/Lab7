@@ -1,5 +1,6 @@
 package managers;
 
+import database.Credentials;
 import models.Pens;
 import models.Pen;
 import exceptions.DuplicateIdException;
@@ -213,8 +214,9 @@ public class CollectionManager {
 
     /**
      * очищает коллекцию
+     * @param credentials
      */
-    public void clear(){
+    public void clear(Credentials credentials){
         this.getPenCollection().clear();
     }
 
